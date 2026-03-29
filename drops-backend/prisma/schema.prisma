@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum HabitType {
+  BINARY
+  QUANTIFIABLE
+  TIME
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  name       String
+  role       Role       @default(USER)
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  habits     Habit[]
+  categories Category[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String   @default("#6366f1")
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habits    Habit[]
+  createdAt DateTime @default(now())
+
+  @@unique([name, userId])
+}
+
+model Habit {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  type        HabitType   @default(BINARY)
+  frequency   Frequency   @default(DAILY)
+  target      Float?      @default(1)
+  unit        String?
+  color       String      @default("#6366f1")
+  icon        String      @default("circle-check")
+  isActive    Boolean     @default(true)
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId  Int?
+  category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  entries     HabitEntry[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+model HabitEntry {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @db.Date
+  completed Boolean  @default(false)
+  value     Float?
+  notes     String?
+  habitId   Int
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([habitId, date])
+  @@index([habitId])
+  @@index([date])
+}
