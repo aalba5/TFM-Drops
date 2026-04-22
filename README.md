@@ -9,10 +9,10 @@ Aplicación web para el seguimiento de hábitos diarios. Proyecto TFM - Máster 
 
 ## Instalación
 
-### 1. Backend (habitflow-server)
+### 1. Backend (drops-server)
 
 ```bash
-cd habitflow-server
+cd drops-server
 npm install
 ```
 
@@ -41,12 +41,12 @@ Iniciar el servidor (puerto 3001):
 npm run dev
 ```
 
-### 2. Frontend (habitflow-client)
+### 2. Frontend (drops-client)
 
 En otra terminal:
 
 ```bash
-cd habitflow-client
+cd drops-client
 npm install
 npm run dev
 ```
@@ -63,8 +63,8 @@ La aplicación estará disponible en `http://localhost:5173`.
 ## Estructura del proyecto
 
 ```
-habitflow-app/
-├── habitflow-server/        # Backend: Node.js + Express + Prisma + SQLite
+drops-app/
+├── drops-server/        # Backend: Node.js + Express + Prisma + SQLite
 │   ├── prisma/              # Schema y seed
 │   ├── src/
 │   │   ├── config/          # Configuración de base de datos
@@ -74,7 +74,7 @@ habitflow-app/
 │   │   └── validators/      # Validación de datos
 │   └── server.js            # Punto de entrada
 │
-├── habitflow-client/        # Frontend: React + Vite + Tailwind CSS
+├── drops-client/        # Frontend: React + Vite + Tailwind CSS
 │   ├── src/
 │   │   ├── components/      # Componentes reutilizables
 │   │   ├── context/         # Estado global (AuthContext)
