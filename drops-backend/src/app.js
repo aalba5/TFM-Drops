@@ -21,6 +21,11 @@ app.use('/api/habits', habitRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Root
+app.get('/', (req, res) => {
+  res.json({ message: 'Drops API is running', version: '1.0.0' });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

@@ -129,4 +129,4 @@ drops-app/
 
 ## Licencia
 
-Proyecto académico - UOC 2025/2026
+CC BY-NC-ND 4.0 — Ana A, 2026
