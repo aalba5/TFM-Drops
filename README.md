@@ -1,161 +1,132 @@
-# Drops — Aplicación web de seguimiento de hábitos personales
+# Drops
 
-**Trabajo Final de Máster** — Máster Universitario en Desarrollo de Sitios y Aplicaciones Web (UOC)
-
-**Autora:** Ana Alba Burgués
-
----
-
-## Descripción
-
-Drops es una aplicación web para el seguimiento de hábitos personales. Permite crear, gestionar y visualizar hábitos diarios con diferentes tipos de seguimiento (binario, cuantificable y tiempo), organizarlos por categorías con colores personalizados y consultar el progreso a lo largo del tiempo.
-
-## Stack tecnológico
-
-| Capa | Tecnología |
-|------|-----------|
-| **Front-end** | React 18 + Vite, Tailwind CSS, React Router v6, Axios, Lucide Icons |
-| **Back-end** | Node.js + Express, JWT + bcrypt, express-validator |
-| **Base de datos** | PostgreSQL + Prisma ORM |
-| **Despliegue** | Vercel (front) + Railway (back + BD) |
+Aplicación web para el seguimiento de hábitos diarios. Proyecto TFM - Máster universitario de Desarrollo de Sitios y Aplicaciones Web (UOC).
 
 ## Requisitos previos
 
-- [Node.js](https://nodejs.org/) v18 o superior
-- [PostgreSQL](https://www.postgresql.org/) v14 o superior
-- npm v9 o superior
+- Node.js >= 18
+- npm >= 9
 
-## Instalación y puesta en marcha
+## Instalación
 
-### 1. Clonar el repositorio
-
-```bash
-git clone 
-cd drops
-```
-
-### 2. Configurar el back-end
+### 1. Backend (habitflow-server)
 
 ```bash
-cd drops-backend
+cd habitflow-server
 npm install
 ```
 
-Crea un archivo `.env` basándote en `.env.example`:
+Configurar variables de entorno (copiar `.env.example` a `.env`):
 
 ```bash
 cp .env.example .env
 ```
 
-Edita `.env` con tu configuración de base de datos:
-
-```env
-DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/drops?schema=public"
-JWT_SECRET="tu-clave-secreta"
-JWT_EXPIRES_IN="24h"
-PORT=3001
-CORS_ORIGIN="http://localhost:5173"
-```
-
-Ejecuta las migraciones y el seed:
+Crear la base de datos y generar el cliente Prisma:
 
 ```bash
-npx prisma migrate dev --name init
-npx prisma db seed
+npx prisma generate
+npx prisma db push
 ```
 
-Inicia el servidor de desarrollo:
+Cargar datos de ejemplo:
+
+```bash
+npm run seed
+```
+
+Iniciar el servidor (puerto 3001):
 
 ```bash
 npm run dev
 ```
 
-La API estará disponible en `http://localhost:3001`.
+### 2. Frontend (habitflow-client)
 
-### 3. Configurar el front-end
+En otra terminal:
 
 ```bash
-cd ../drops-frontend
+cd habitflow-client
 npm install
-```
-
-Inicia el servidor de desarrollo:
-
-```bash
 npm run dev
 ```
 
 La aplicación estará disponible en `http://localhost:5173`.
 
-## Usuarios de prueba
+## Credenciales de prueba
 
-| Rol | Email | Contraseña |
-|-----|-------|-----------|
-| Administrador | admin@drops.app | Admin123! |
-| Usuario | ana@drops.app | User1234! |
+| Rol   | Email               | Contraseña |
+|-------|---------------------|------------|
+| Admin | admin@drops.com | Admin1234  |
+| Demo  | demo@drops.com  | Demo1234   |
 
 ## Estructura del proyecto
 
 ```
-drops/
-├── drops-frontend/          # Aplicación React (SPA)
+habitflow-app/
+├── habitflow-server/        # Backend: Node.js + Express + Prisma + SQLite
+│   ├── prisma/              # Schema y seed
 │   ├── src/
-│   │   ├── components/      # Componentes (Atomic Design)
-│   │   │   ├── atoms/       # Botones, inputs, badges
-│   │   │   ├── molecules/   # Combinaciones de átomos
-│   │   │   └── organisms/   # Navbar, HabitCard, modales
-│   │   ├── context/         # AuthContext (gestión de sesión)
-│   │   ├── hooks/           # Custom hooks
-│   │   ├── layouts/         # MainLayout
+│   │   ├── config/          # Configuración de base de datos
+│   │   ├── controllers/     # Lógica de negocio
+│   │   ├── middleware/      # Auth JWT, admin, errores
+│   │   ├── routes/          # Definición de endpoints
+│   │   └── validators/      # Validación de datos
+│   └── server.js            # Punto de entrada
+│
+├── habitflow-client/        # Frontend: React + Vite + Tailwind CSS
+│   ├── src/
+│   │   ├── components/      # Componentes reutilizables
+│   │   ├── context/         # Estado global (AuthContext)
 │   │   ├── pages/           # Páginas de la aplicación
-│   │   ├── services/        # Servicios API (axios)
-│   │   └── utils/           # Utilidades
-│   └── ...
-├── drops-backend/           # API REST (Express)
-│   ├── prisma/
-│   │   ├── schema.prisma    # Esquema de base de datos
-│   │   └── seed.js          # Datos de prueba
-│   └── src/
-│       ├── config/          # Configuración (Prisma client)
-│       ├── controllers/     # Lógica de negocio
-│       ├── middlewares/      # Auth, validación, errores
-│       ├── routes/          # Definición de rutas API
-│       └── server.js        # Punto de entrada
+│   │   └── services/        # Llamadas a la API
+│   └── index.html
+│
 └── README.md
 ```
 
-## Endpoints de la API
+## API Endpoints
 
 ### Autenticación
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| POST | `/api/auth/register` | Registro de usuario |
-| POST | `/api/auth/login` | Inicio de sesión |
-| GET | `/api/auth/me` | Obtener usuario autenticado |
+- `POST /api/auth/register` - Registro de usuario
+- `POST /api/auth/login` - Inicio de sesión
+- `GET /api/auth/profile` - Perfil del usuario (autenticado)
 
-### Hábitos (requiere autenticación)
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/habits` | Listar hábitos del usuario |
-| GET | `/api/habits/:id` | Detalle de un hábito |
-| POST | `/api/habits` | Crear hábito |
-| PUT | `/api/habits/:id` | Editar hábito |
-| DELETE | `/api/habits/:id` | Archivar hábito |
+### Hábitos (autenticado)
+- `GET /api/habits` - Listar hábitos del usuario
+- `GET /api/habits/:id` - Detalle de un hábito
+- `POST /api/habits` - Crear hábito
+- `PUT /api/habits/:id` - Actualizar hábito
+- `DELETE /api/habits/:id` - Eliminar hábito
+- `POST /api/habits/:id/toggle` - Marcar/desmarcar día
+- `GET /api/habits/:id/stats` - Estadísticas del hábito
 
-### Categorías (requiere autenticación)
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/categories` | Listar categorías |
-| POST | `/api/categories` | Crear categoría |
-| PUT | `/api/categories/:id` | Editar categoría |
-| DELETE | `/api/categories/:id` | Eliminar categoría |
+### Categorías (autenticado)
+- `GET /api/categories` - Listar categorías
+- `POST /api/categories` - Crear categoría
+- `PUT /api/categories/:id` - Actualizar categoría
+- `DELETE /api/categories/:id` - Eliminar categoría
 
-### Administración (requiere rol ADMIN)
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/users` | Listar usuarios |
-| PATCH | `/api/users/:id/toggle-active` | Activar/desactivar usuario |
+### Administración (admin)
+- `GET /api/admin/users` - Listar usuarios
+- `DELETE /api/admin/users/:id` - Eliminar usuario
+- `GET /api/admin/dashboard` - Estadísticas generales
+
+## Tecnologías
+
+### Backend
+- **Node.js** + **Express** - Servidor web
+- **Prisma** - ORM para base de datos
+- **SQLite** - Base de datos (desarrollo)
+- **JWT** - Autenticación
+- **bcryptjs** - Hash de contraseñas
+
+### Frontend
+- **React 19** - Librería UI
+- **Vite** - Build tool
+- **Tailwind CSS** - Estilos
+- **React Router 7** - Enrutamiento
 
 ## Licencia
 
-CC BY-NC-ND 4.0 — Ana Alba Burgués, 2026
+Proyecto académico - UOC 2025/2026
