@@ -9,10 +9,10 @@ Aplicación web para el seguimiento de hábitos diarios. Proyecto TFM - Máster 
 
 ## Instalación
 
-### 1. Backend (drops-server)
+### 1. Backend (drops-backend)
 
 ```bash
-cd drops-server
+cd drops-backend
 npm install
 ```
 
@@ -41,12 +41,12 @@ Iniciar el servidor (puerto 3001):
 npm run dev
 ```
 
-### 2. Frontend (drops-client)
+### 2. Frontend (drops-frontend)
 
 En otra terminal:
 
 ```bash
-cd drops-client
+cd drops-frontend
 npm install
 npm run dev
 ```
@@ -63,8 +63,8 @@ La aplicación estará disponible en `http://localhost:5173`.
 ## Estructura del proyecto
 
 ```
-drops-app/
-├── drops-server/        # Backend: Node.js + Express + Prisma + SQLite
+TFM-Drops/
+├── drops-backend/       # Backend: Node.js + Express + Prisma + SQLite
 │   ├── prisma/              # Schema y seed
 │   ├── src/
 │   │   ├── config/          # Configuración de base de datos
@@ -74,10 +74,15 @@ drops-app/
 │   │   └── validators/      # Validación de datos
 │   └── server.js            # Punto de entrada
 │
-├── drops-client/        # Frontend: React + Vite + Tailwind CSS
+├── drops-frontend/      # Frontend: React + Vite + Tailwind CSS
 │   ├── src/
-│   │   ├── components/      # Componentes reutilizables
+│   │   ├── components/
+│   │   │   ├── ui/          # Componentes shadcn (Card, Tooltip, HeatmapCalendar)
+│   │   │   ├── habits/      # Componentes de hábitos
+│   │   │   ├── common/      # Componentes reutilizables
+│   │   │   └── layout/      # Layout y navegación
 │   │   ├── context/         # Estado global (AuthContext)
+│   │   ├── lib/             # Utilidades (cn)
 │   │   ├── pages/           # Páginas de la aplicación
 │   │   └── services/        # Llamadas a la API
 │   └── index.html
@@ -126,6 +131,10 @@ drops-app/
 - **Vite** - Build tool
 - **Tailwind CSS** - Estilos
 - **React Router 7** - Enrutamiento
+- **shadcn/ui** - Componentes UI (Card, Tooltip)
+- **shadcn-heatmap** - Calendario de actividad tipo GitHub
+- **Radix UI** - Primitivos de accesibilidad (Tooltip)
+- **clsx + tailwind-merge** - Gestión de clases CSS
 
 ## Licencia
 

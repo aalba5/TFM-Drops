@@ -115,10 +115,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Actividad anual</h2>
-        <HabitHeatmap entries={heatmapEntries} />
-      </div>
+      <HabitHeatmap entries={heatmapEntries} />
 
       {habitRows.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
