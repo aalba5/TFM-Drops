@@ -25,7 +25,7 @@ const toggleUserActive = async (req, res, next) => {
   try {
     const userId = parseInt(req.params.id);
 
-    // Prevent admin from deactivating themselves
+    // Prevent admin from deactivating
     if (userId === req.user.id) {
       return res.status(400).json({ error: 'No puedes desactivar tu propia cuenta' });
     }
