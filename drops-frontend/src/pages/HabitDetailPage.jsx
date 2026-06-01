@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Flame, Trophy, CalendarDays } from 'lucide-react';
 import * as habitService from '../services/habitService';
 import Button from '../components/common/Button';
 import Alert from '../components/common/Alert';
@@ -93,9 +94,9 @@ export default function HabitDetailPage() {
 
       {stats && (
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <HabitStatsCard icon="🔥" value={stats.currentStreak} label="Racha actual" color="bg-orange-50" />
-          <HabitStatsCard icon="🏆" value={stats.bestStreak} label="Mejor racha" color="bg-amber-50" />
-          <HabitStatsCard icon="📅" value={stats.totalEntries} label="Días completados" color="bg-indigo-50" />
+          <HabitStatsCard icon={<Flame size={22} className="text-orange-500" />} value={stats.currentStreak} label="Racha actual" color="bg-orange-50" />
+          <HabitStatsCard icon={<Trophy size={22} className="text-amber-500" />} value={stats.bestStreak} label="Mejor racha" color="bg-amber-50" />
+          <HabitStatsCard icon={<CalendarDays size={22} className="text-indigo-500" />} value={stats.totalEntries} label="Días completados" color="bg-indigo-50" />
         </div>
       )}
 

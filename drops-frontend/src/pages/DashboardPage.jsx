@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { ClipboardList, CircleCheck, Flame, Trophy, TrendingUp } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import * as habitService from '../services/habitService';
 import HabitHeatmap from '../components/habits/HabitHeatmap';
@@ -110,11 +111,11 @@ export default function DashboardPage() {
 
       {globalStats && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <HabitStatsCard icon="📋" value={habits.length} label="Hábitos activos" color="bg-indigo-50" />
-          <HabitStatsCard icon="✅" value={globalStats.completedToday} label="Completados hoy" color="bg-green-50" />
-          <HabitStatsCard icon="🔥" value={globalStats.currentStreak} label="Racha actual" color="bg-orange-50" />
-          <HabitStatsCard icon="🏆" value={globalStats.bestStreak} label="Mejor racha" color="bg-amber-50" />
-          <HabitStatsCard icon="📈" value={`${globalStats.completionRate}%`} label="Tasa del mes" color="bg-purple-50" />
+          <HabitStatsCard icon={<ClipboardList size={22} className="text-indigo-500" />} value={habits.length} label="Hábitos activos" color="bg-indigo-50" />
+          <HabitStatsCard icon={<CircleCheck size={22} className="text-green-500" />} value={globalStats.completedToday} label="Completados hoy" color="bg-green-50" />
+          <HabitStatsCard icon={<Flame size={22} className="text-orange-500" />} value={globalStats.currentStreak} label="Racha actual" color="bg-orange-50" />
+          <HabitStatsCard icon={<Trophy size={22} className="text-amber-500" />} value={globalStats.bestStreak} label="Mejor racha" color="bg-amber-50" />
+          <HabitStatsCard icon={<TrendingUp size={22} className="text-purple-500" />} value={`${globalStats.completionRate}%`} label="Tasa del mes" color="bg-purple-50" />
         </div>
       )}
 
