@@ -4,7 +4,9 @@ const getCategories = async (req, res, next) => {
   try {
     const categories = await prisma.category.findMany({
       include: {
-        _count: { select: { habits: true } },
+        _count: {
+          select: { habits: { where: { userId: req.user.id } } },
+        },
       },
       orderBy: { name: 'asc' },
     });

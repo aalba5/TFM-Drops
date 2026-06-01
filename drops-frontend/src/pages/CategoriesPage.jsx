@@ -12,6 +12,7 @@ export default function CategoriesPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [form, setForm] = useState({ name: '', color: '#6366f1', icon: '' });
+  const [deleteModal, setDeleteModal] = useState({ open: false, category: null });
 
   useEffect(() => {
     loadCategories();
@@ -55,13 +56,18 @@ export default function CategoriesPage() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar esta categoría?')) return;
+  const openDeleteModal = (cat) => {
+    setDeleteModal({ open: true, category: cat });
+  };
+
+  const handleDelete = async () => {
     try {
-      await categoryService.deleteCategory(id);
+      await categoryService.deleteCategory(deleteModal.category.id);
+      setDeleteModal({ open: false, category: null });
       loadCategories();
     } catch (err) {
       setError(err.message);
+      setDeleteModal({ open: false, category: null });
     }
   };
 
@@ -98,7 +104,7 @@ export default function CategoriesPage() {
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full" style={{ backgroundColor: cat.color }}></div>
                   <Button variant="ghost" size="sm" onClick={() => openEdit(cat)}>Editar</Button>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(cat.id)} className="text-red-600 hover:bg-red-50">
+                  <Button variant="ghost" size="sm" onClick={() => openDeleteModal(cat)} className="text-red-600 hover:bg-red-50">
                     Eliminar
                   </Button>
                 </div>
@@ -107,6 +113,33 @@ export default function CategoriesPage() {
           ))}
         </div>
       )}
+
+      <Modal
+        isOpen={deleteModal.open}
+        onClose={() => setDeleteModal({ open: false, category: null })}
+        title="Eliminar categoría"
+      >
+        {deleteModal.category && (
+          <div>
+            <p className="text-gray-600 mb-2">
+              ¿Estás seguro de que quieres eliminar la categoría <span className="font-semibold">"{deleteModal.category.name}"</span>?
+            </p>
+            {deleteModal.category._count?.habits > 0 && (
+              <p className="text-amber-700 bg-amber-50 rounded-lg px-3 py-2 text-sm mb-4">
+                {deleteModal.category._count.habits} hábito{deleteModal.category._count.habits !== 1 ? 's' : ''} de esta categoría quedarán sin categoría asignada.
+              </p>
+            )}
+            <div className="flex gap-3 pt-2">
+              <Button variant="danger" className="flex-1" onClick={handleDelete}>
+                Sí, eliminar
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setDeleteModal({ open: false, category: null })}>
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editingCategory ? 'Editar categoría' : 'Nueva categoría'}>
         <form onSubmit={handleSubmit} className="space-y-4">

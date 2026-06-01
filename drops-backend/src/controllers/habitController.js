@@ -161,7 +161,7 @@ const getStats = async (req, res, next) => {
 
     const totalEntries = habit.entries.length;
 
-    // Calculate current strek
+    // Calculate current streak
     let currentStreak = 0;
     const today = new Date();
     const sortedDates = habit.entries

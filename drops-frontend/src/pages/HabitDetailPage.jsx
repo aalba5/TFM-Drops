@@ -42,14 +42,16 @@ export default function HabitDetailPage() {
     }
   };
 
-  // Generate last 30 days for the calendar grid
   const getLast30Days = () => {
     const days = [];
     const today = new Date();
     for (let i = 29; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      days.push(date.toISOString().split('T')[0]);
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      days.push(`${y}-${m}-${d}`);
     }
     return days;
   };
@@ -97,7 +99,8 @@ export default function HabitDetailPage() {
         </div>
       )}
 
-      <div className="mb-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Actividad anual</h2>
         <HabitHeatmap entries={habit.entries || []} />
       </div>
 

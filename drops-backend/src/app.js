@@ -10,8 +10,8 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true,
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+  credentials: false,
 }));
 app.use(express.json());
 
@@ -20,11 +20,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/habits', habitRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
-
-// Root
-app.get('/', (req, res) => {
-  res.json({ message: 'Drops API is running', version: '1.0.0' });
-});
 
 // Health check
 app.get('/api/health', (req, res) => {

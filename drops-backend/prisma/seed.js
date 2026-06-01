@@ -53,7 +53,7 @@ async function main() {
     )
   );
 
-  
+  // Generate 90 days of entries per habit with individual completion rates
   const today = new Date();
   for (let hi = 0; hi < habits.length; hi++) {
     const habit = habits[hi];

@@ -15,8 +15,12 @@ export default function HabitsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingHabit, setEditingHabit] = useState(null);
   const [form, setForm] = useState({ name: '', description: '', frequency: 'daily', color: '#6366f1', categoryId: '' });
+  const [deleteModal, setDeleteModal] = useState({ open: false, habit: null });
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  })();
 
   useEffect(() => {
     loadData();
@@ -70,13 +74,18 @@ export default function HabitsPage() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar este hábito?')) return;
+  const openDeleteModal = (habit) => {
+    setDeleteModal({ open: true, habit });
+  };
+
+  const handleDelete = async () => {
     try {
-      await habitService.deleteHabit(id);
+      await habitService.deleteHabit(deleteModal.habit.id);
+      setDeleteModal({ open: false, habit: null });
       loadData();
     } catch (err) {
       setError(err.message);
+      setDeleteModal({ open: false, habit: null });
     }
   };
 
@@ -149,7 +158,7 @@ export default function HabitsPage() {
                 <Button variant="ghost" size="sm" onClick={() => openEdit(habit)}>
                   Editar
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => handleDelete(habit.id)} className="text-red-600 hover:bg-red-50">
+                <Button variant="ghost" size="sm" onClick={() => openDeleteModal(habit)} className="text-red-600 hover:bg-red-50">
                   Eliminar
                 </Button>
               </div>
@@ -157,6 +166,28 @@ export default function HabitsPage() {
           ))}
         </div>
       )}
+
+      <Modal
+        isOpen={deleteModal.open}
+        onClose={() => setDeleteModal({ open: false, habit: null })}
+        title="Eliminar hábito"
+      >
+        {deleteModal.habit && (
+          <div>
+            <p className="text-gray-600 mb-4">
+              ¿Estás seguro de que quieres eliminar el hábito <span className="font-semibold">"{deleteModal.habit.name}"</span>? Esta acción eliminará también todo su historial de registros.
+            </p>
+            <div className="flex gap-3">
+              <Button variant="danger" className="flex-1" onClick={handleDelete}>
+                Sí, eliminar
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setDeleteModal({ open: false, habit: null })}>
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editingHabit ? 'Editar hábito' : 'Nuevo hábito'}>
         <form onSubmit={handleSubmit} className="space-y-4">
